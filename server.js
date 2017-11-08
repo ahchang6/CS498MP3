@@ -3,6 +3,8 @@ var express = require('express'),
     router = express.Router(),
     mongoose = require('mongoose'),
     secrets = require('./config/secrets'),
+    User = require('./models/user'),
+    Task = require('./models/task'),
     bodyParser = require('body-parser');
 
 // Create our Express application
@@ -13,6 +15,8 @@ var port = process.env.PORT || 3000;
 
 // Connect to a MongoDB
 mongoose.connect(secrets.mongo_connection, { useMongoClient: true});
+
+var db = mongoose.connection;
 
 // Allow CORS so that backend and frontend could be put on different servers
 var allowCrossDomain = function (req, res, next) {
