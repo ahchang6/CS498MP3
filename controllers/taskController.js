@@ -25,7 +25,7 @@ exports.list_all_tasks = function(req, res) {
 exports.create_a_task = function(req, res) {
     console.log(req.body);
     console.log(req.body.hasOwnProperty('name'));
-    if(!req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('email'))
+    if(!req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('deadline'))
         res.status(500).send("Name or Email not filled!");
 
     else{
@@ -34,24 +34,31 @@ exports.create_a_task = function(req, res) {
             if (err)
                 res.status(500).json(createResponse(errFive,{}));
             else {
-                res.json(createResponse("created task", task));
+                res.status(201).json(createResponse("created task", task));
 
             }
         });
     }
 };
-exports.get_a_task = function(req, res) {
-    Task.find({}, function(err, tasks) {
-        if (err) res.status(500).json(createResponse(errFive,{}));
-        else if(task === null) res.json(createResponse("404", {}));
-        else {
-            // object of all the tasks
-            res.json(createResponse("OK", tasks));
-        }
-    });
+exports.update_a_task = function(req, res) {
+    var task_id = req.params.id;
+    var updated = req.body;
+    console.log(task_id);
+    try {
+        Task.findByIdAndUpdate(task_id, updated, function (err, result) {
+            if (err) res.status(500).json(createResponse(errFive,{}));
+            else if(result === null) res.json(createResponse("404", {}));
+            else {
+                res.json(createResponse("OK", result));
+            }
+        });
+    }
+    catch(err){
+        res.status(500).json(createResponse("500", {}));
+    }
 };
 
-exports.update_a_task = function(req, res){
+exports.get_a_task = function(req, res){
     var task_id = req.params.id;
     console.log(task_id);
     try {

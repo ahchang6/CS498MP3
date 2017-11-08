@@ -4,12 +4,12 @@ var mongoose = require('mongoose');
 // Define our user schema
 var TaskSchema = mongoose.Schema({
     name : String,
-    description: String,
+    description: {type: String, default: "no description"},
     deadline : Date,
-    completed: Boolean,
+    completed: {type: Boolean, default: false},
     assignedUser: {type: String, default: ""},
     assignedUserName : {type: String, default: "unassigned"},
-    dateCreated: Date
+    dateCreated: {type: Date, default: new Date()}
 });
 
 // Export the Mongoose model
