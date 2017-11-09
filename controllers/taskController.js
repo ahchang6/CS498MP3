@@ -31,14 +31,18 @@ exports.list_all_tasks = function(req, res) {
     if(req.query.limit){
         query = query.find(req.query.limit);
     }
-    if(req.query.count){
-        query = query.find(req.query.count);
-    }
     query.find(function(err, tasks) {
-        if (err) res.status(404).json(createResponse(notFound,{}));
+        if (err) res.status(500).json(createResponse(notFound,{}));
+        else if (tasks===null) res.status(404).json(createResponse(notFound,{}));
         else {
             // object of all the users
-            res.json(createResponse("OK", tasks));
+            if(req.query.count){
+                res.json(createResponse("OK", tasks.length));
+            }
+            else {
+                res.json(createResponse("OK", tasks));
+            }
+
         }
     });
 };
@@ -68,7 +72,7 @@ exports.update_a_task = function(req, res) {
     try {
         Task.findByIdAndUpdate(task_id, updated, {new: true}, function (err, result) {
             if (err) res.status(500).json(createResponse(errFive,{}));
-            else if(result === null) res.json(createResponse("404", {}));
+            else if(result === null) res.status(404).json(createResponse("404", {}));
             else {
                 res.json(createResponse("OK", result));
             }
@@ -85,7 +89,7 @@ exports.get_a_task = function(req, res){
     try {
         Task.findById(task_id, function (err, task) {
             if (err) res.status(500).json(createResponse(errFive,{}));
-            else if(task === null) res.json(createResponse("404", {}));
+            else if(task === null) res.status(404).json(createResponse("404", {}));
             else {
                 res.json(createResponse("OK", task));
             }
@@ -104,7 +108,7 @@ exports.remove_a_task = function(req, res){
     try {
         Task.findById(task_id, function (err, task) {
             if (err) res.status(500).json(createResponse(errFive,{}));
-            else if(task === null) res.json(createResponse("404", {}));
+            else if(task === null) res.status(404).json(createResponse("404", {}));
             else {
                 task.remove();
                 res.json(createResponse("OK", task));

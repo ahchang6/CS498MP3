@@ -31,14 +31,17 @@ exports.list_all_users = function(req, res) {
     if(req.query.limit){
         query = query.find(req.query.limit);
     }
-    if(req.query.count){
-        query = query.find(req.query.count);
-    }
     query.find(function(err, users) {
-        if (err) res.status(404).json(createResponse(notFound,{}));
+        if (err) res.status(500).json(createResponse(notFound,{}));
+        else if (users===null) res.status(404).json(createResponse(notFound,{}));
         else {
             // object of all the users
-            res.json(createResponse("OK", users));
+            if(req.query.count){
+                res.json(createResponse("OK", users.length));
+            }
+            else {
+                res.json(createResponse("OK", users));
+            }
         }
     });
 };
@@ -77,7 +80,7 @@ exports.update_a_user = function(req, res){
     try {
         User.findByIdAndUpdate(user_id, updated, {new: true}, function (err, result) {
             if (err) res.status(500).json(createResponse(errFive,{}));
-            else if(result === null) res.json(createResponse("404", {}));
+            else if(result === null) res.status(404).json(createResponse("404", {}));
             else {
                 res.json(createResponse("OK", result));
             }
@@ -95,7 +98,7 @@ exports.get_a_user = function(req, res){
     try {
         User.findById(user_id, function (err, user) {
             if (err) res.status(500).json(createResponse(errFive,{}));
-            else if(user === null) res.json(createResponse("404", {}));
+            else if(user === null) res.status(404).json(createResponse("404", {}));
             else {
                 res.json(createResponse("OK", user));
             }
@@ -114,7 +117,7 @@ exports.remove_a_user = function(req, res){
     try {
         User.findById(user_id, function (err, user) {
             if (err) res.status(500).json(createResponse(errFive,{}));
-            else if(user === null) res.json(createResponse("404", {}));
+            else if(user === null) res.status(404).json(createResponse("404", {}));
             else {
                 user.remove();
                 res.json(createResponse("OK", user));
