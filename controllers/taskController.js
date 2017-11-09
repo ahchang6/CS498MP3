@@ -34,7 +34,7 @@ exports.list_all_tasks = function(req, res) {
     if(req.query.count){
         query = query.find(req.query.count);
     }
-    query.find(function(err, users) {
+    query.find(function(err, tasks) {
         if (err) res.status(404).json(createResponse(notFound,{}));
         else {
             // object of all the users
@@ -61,7 +61,6 @@ exports.create_a_task = function(req, res) {
     }
 };
 
-exports.filtered_tasks = function(req,res){};
 exports.update_a_task = function(req, res) {
     var task_id = req.params.id;
     var updated = req.body;

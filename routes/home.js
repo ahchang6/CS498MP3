@@ -20,8 +20,7 @@ module.exports = function (router) {
 
     router.route('/users')
         .get(User.list_all_users)
-        .post(User.create_a_user)
-        .options(User.filtered_users);
+        .post(User.create_a_user);
 
     var Task = require('../controllers/taskController');
     router.route('/tasks/:id')
@@ -31,8 +30,7 @@ module.exports = function (router) {
 
     router.route('/tasks')
         .get(Task.list_all_tasks)
-        .post(Task.create_a_task)
-        .options(Task.filtered_tasks);
+        .post(Task.create_a_task);
 
     return router;
 };
