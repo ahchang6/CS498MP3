@@ -14,7 +14,27 @@ var notFound = "request could not be found";
 var errFive = "request could not be processed";
 //
 exports.list_all_users = function(req, res) {
-    User.find({}, function(err, users) {
+    var where ={};
+    if(req.query.where){
+        where = req.query.where;
+    }
+    var query = User.find(where);
+    if(req.query.sort){
+        query = query.find(req.query.sort);
+    }
+    if(req.query.select){
+        query = query.find(req.query.select);
+    }
+    if(req.query.skip){
+        query = query.find(req.query.skip);
+    }
+    if(req.query.limit){
+        query = query.find(req.query.limit);
+    }
+    if(req.query.count){
+        query = query.find(req.query.count);
+    }
+    query.find(function(err, users) {
         if (err) res.status(404).json(createResponse(notFound,{}));
         else {
             // object of all the users
@@ -23,8 +43,6 @@ exports.list_all_users = function(req, res) {
     });
 };
 exports.create_a_user = function(req, res) {
-    console.log(req.body);
-    console.log(req.body.hasOwnProperty('name'));
     if(!req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('email'))
         res.status(500).send("Name or Email not filled!");
 
@@ -52,7 +70,7 @@ exports.create_a_user = function(req, res) {
 
 
 exports.filtered_users = function(req, res){
-    
+   res.send("y");
 
 };
 
@@ -112,3 +130,15 @@ exports.remove_a_user = function(req, res){
     }
 
 };
+
+
+function queryBuilder(query){
+    console.log(query);
+    var combined_where = {};
+    var where_query = JSON.parse(query.where[0]);
+    for(var i = 0;i<where_query.length;i++){
+        combined_where = Object.assign(combined_where, where_query[i])
+    }
+    return combined_where;
+
+}

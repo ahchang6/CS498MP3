@@ -14,10 +14,30 @@ var notFound = "request could not be found";
 var errFive = "request could not be processed";
 //
 exports.list_all_tasks = function(req, res) {
-    Task.find({}, function(err, tasks) {
+    var where ={};
+    if(req.query.where){
+        where = req.query.where;
+    }
+    var query = Task.find(where);
+    if(req.query.sort){
+        query = query.find(req.query.sort);
+    }
+    if(req.query.select){
+        query = query.find(req.query.select);
+    }
+    if(req.query.skip){
+        query = query.find(req.query.skip);
+    }
+    if(req.query.limit){
+        query = query.find(req.query.limit);
+    }
+    if(req.query.count){
+        query = query.find(req.query.count);
+    }
+    query.find(function(err, users) {
         if (err) res.status(404).json(createResponse(notFound,{}));
         else {
-            // object of all the tasks
+            // object of all the users
             res.json(createResponse("OK", tasks));
         }
     });
@@ -40,6 +60,8 @@ exports.create_a_task = function(req, res) {
         });
     }
 };
+
+exports.filtered_tasks = function(req,res){};
 exports.update_a_task = function(req, res) {
     var task_id = req.params.id;
     var updated = req.body;

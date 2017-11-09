@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 // Define our user schema
 var TaskSchema = mongoose.Schema({
+    _id: {type: mongoose.Schema.ObjectId, default: mongoose.Types.ObjectId()},
     name : String,
     description: {type: String, default: "no description"},
     deadline : Date,

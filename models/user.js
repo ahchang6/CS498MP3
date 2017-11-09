@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 
 // Define our user schema
 var UserSchema = new mongoose.Schema({
+        _id: {type: mongoose.Schema.ObjectId, default: mongoose.Types.ObjectId()},
         name : String,
         email : String,
         pendingTasks: [String],
