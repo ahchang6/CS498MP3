@@ -66,7 +66,7 @@ exports.update_a_task = function(req, res) {
     var updated = req.body;
     console.log(task_id);
     try {
-        Task.findByIdAndUpdate(task_id, updated, function (err, result) {
+        Task.findByIdAndUpdate(task_id, updated, {new: true}, function (err, result) {
             if (err) res.status(500).json(createResponse(errFive,{}));
             else if(result === null) res.json(createResponse("404", {}));
             else {

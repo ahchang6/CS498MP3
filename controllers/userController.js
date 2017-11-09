@@ -69,17 +69,13 @@ exports.create_a_user = function(req, res) {
 };
 
 
-exports.filtered_users = function(req, res){
-   res.send("y");
-
-};
 
 exports.update_a_user = function(req, res){
     var user_id = req.params.id;
     var updated = req.body;
     console.log(user_id);
     try {
-        User.findByIdAndUpdate(user_id, updated, function (err, result) {
+        User.findByIdAndUpdate(user_id, updated, {new: true}, function (err, result) {
             if (err) res.status(500).json(createResponse(errFive,{}));
             else if(result === null) res.json(createResponse("404", {}));
             else {
